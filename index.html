@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Hashy Messi</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+
+	<script src="CryptoJS/rollups/sha256.js"></script>
+	<script src="CryptoJS/rollups/aes.js"></script>
+
+	<script type="text/javascript">
+
+		function crypt () {
+			var pass = document.getElementById("pass").value;
+			var service = document.getElementById("service").value;
+			if(pass.length==0 || service.length == 0){
+				document.getElementById("outS").innerHTML = "";
+				document.getElementById("outM").innerHTML = "";
+				document.getElementById("outL").innerHTML = "";
+				toast('Enter password and Service ID', 'error')
+				return;
+			}
+			var newPass = CryptoJS.AES.encrypt(service, pass).toString();
+			newPass = newPass.substring(10, newPass.length)
+			setPassword(newPass)
+		}
+
+		function sha256(){
+
+			var pass = document.getElementById("pass").value;
+			var service = document.getElementById("service").value;
+			if(pass.length==0 || service.length == 0){
+				document.getElementById("outS").innerHTML = "";
+				document.getElementById("outM").innerHTML = "";
+				document.getElementById("outL").innerHTML = "";
+				toast('Enter password and Service ID', 'error')
+				return;
+			}
+			var newPass = CryptoJS.SHA256(pass + service).toString();
+			setPassword(newPass)
+
+
+		}
+
+		function setPassword (newPass, cPass) {
+
+			document.getElementById("outS").innerHTML = newPass.substring(0,10);
+			document.getElementById("outM").innerHTML = newPass.substring(0,20);
+			document.getElementById("outL").innerHTML = newPass;
+			document.getElementById("out").classList.remove("hidden")
+
+			setTimeout(() => {
+				document.getElementById("err").innerHTML = "";
+				document.getElementById("outS").innerHTML = "";
+				document.getElementById("outM").innerHTML = "";
+				document.getElementById("outL").innerHTML = "";
+				document.getElementById("out").classList.add("hidden")
+			}, 60000);
+
+		}
+
+		function copy (id) {
+			var text = document.getElementById(id).innerText
+			navigator.clipboard.writeText(text).then(function() {
+				toast('Copied to clipboard')
+				resetClipboard()
+			}, function(err) {
+				toast('Could not copy', 'error')
+			});
+		}
+
+		function resetClipboard () {
+			setTimeout(() => {
+				navigator.clipboard.writeText('').then(function() {
+				toast('Reset to clipboard', "warn")
+				resetClipboard()
+				}, function(err) {
+					toast('Could not copy', 'error')
+				});
+			}, 60000)
+		}
+
+		function toast (message, cls) {
+			var node = document.getElementById('toast')
+			node.innerText = message
+			if (cls) {
+			
+				node.classList.add(cls)
+			}
+			node.classList.remove('hidden')
+			setTimeout(() => {
+				node.classList.add('hidden')
+			}, 2000)
+		}
+
+	</script>
+
+
+	<style>
+		html{
+		  height: 100%;
+		  background: #f6f6f6;
+		  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+		}
+
+
+		body{
+			width: 100%;
+			min-height: 100%;
+		 	background: #f6f6f6;
+			font-size: 18px;
+		}
+
+		H3{
+		 	text-shadow: 1px 1px #fff;
+		}
+
+		.btn{
+			outline: none;
+			cursor: pointer;
+			display: inline-block;
+			padding: 8px 8px;
+			background: #49C0F0;
+			border-radius:4px;
+			border-bottom: 2px solid #0099CC;
+			color:#fff;
+			cursor: pointer;
+			text-align: center;
+			transition: all 0.15s;
+		}
+
+		.btn:HOVER{
+			background: #0099CC;
+			padding-bottom: 6px;
+			margin-top: 2px;
+		}
+
+		input{
+		    font-size: 18px;
+		    background-color: #fff;
+		    background-image: none;
+		    border: 1px solid #ccc;
+		    border-radius: 4px;
+		    box-shadow:none;
+		    color: #555;
+		    padding: 8px;
+		    width: 100%;
+			box-sizing: border-box;
+		}
+
+		input:focus {
+			outline: none;
+			border: 1px solid #0099CC;
+		}
+
+		.lbl{
+			width:400px;
+			text-align: left;
+			font-size: 16px;
+			color: #777;
+	
+		}
+
+		.out {
+			width: 100%;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+
+		.row {
+			display: flex;
+			flex-direction: column;
+			justify-content: left;
+			gap: 8px;
+			margin-bottom: 24px;
+			align-items: flex-start;
+			width: 800px;
+		}
+
+		.passwords .row {
+			background: #fff;
+			padding: 16px;
+			box-sizing: border-box;
+			border-radius: 4px;
+			border: 1px solid #ccc;
+		}
+
+		.toast {
+			position: fixed;
+			bottom: 4px;
+			left: 4px;
+			padding: 8px;
+			font-size: 16px;
+			border-radius: 4px;
+			background: #6da000;
+			color: #fff;
+		}
+
+		.toast.error {
+			background: #d52d2d;
+		}
+
+		.toast.warn {
+			background: #ffc31f;
+		}
+		
+		.cntr {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			margin-bottom: 32px;
+		}
+
+		@media only screen and (max-width: 600px) {
+
+			.cntr {
+				padding-left: 32px;
+    			padding-right: 32px;
+			}
+		
+			.row {
+			    width: 100%;
+			}
+
+			.toast {
+				position: fixed;
+				top: 4px;
+				left: 4px;
+				bottom: unset;
+			}
+		}
+
+		.hidden {
+			display: none;
+		}
+
+
+	</style>
+</head>
+<body>
+
+	<div class="center">
+
+
+		<div class="cntr">
+			<div class="row">
+				<label class="lbl">Your password</label>
+				<input type="password" id="pass" class="out">
+			</div>
+			<div class="row">
+				<label class="lbl" class="out"> Service ID</label>
+				<input type="text" id="service">
+			</div>
+
+			<div class="row" style="flex-direction: row;">
+				<a onclick="sha256()" class="btn">Hash</a> <a onclick="crypt()" class="btn">Crypt</a>
+			</div>
+		</div>
+
+
+		<div id="out" class="cntr passwords hidden">
+			<div  class="row" onclick="copy('outS')">
+				<label class="lbl">Weak Password</label>
+				<div id="outS" class="out"></div>
+		
+			</div>
+			<div class="row" onclick="copy('outM')">
+				<label class="lbl">Medium Password</label>
+				<div id="outM" class="out"></div>
+			</div>
+
+			<div class="row" onclick="copy('outL')">
+				<label class="lbl">Strong Password</label>
+				<div id="outL" class="out"></div>
+			</div>
+		</div>
+
+
+
+	</div>
+
+	<div id="toast" class="toast hidden"></div>
+
+</body>
+</html>
