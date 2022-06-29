@@ -158,11 +158,11 @@
 		.lbl{
 			width:400px;
 			text-align: left;
-			font-size: 16px;
+			font-size: 14px;
 			color: #777;
-	
 		}
 
+	
 		.out {
 			width: 100%;
 			white-space: nowrap;
@@ -179,6 +179,7 @@
 			margin-bottom: 24px;
 			align-items: flex-start;
 			width: 800px;
+		
 		}
 
 		.passwords .row {
@@ -187,7 +188,17 @@
 			box-sizing: border-box;
 			border-radius: 4px;
 			border: 1px solid #ccc;
+			position: relative;
 		}
+
+		.passwords .lbl span {
+			color: #ccc;
+			position: absolute;
+			right: 16px;
+			top:16px;
+			font-size: 14px;
+		}
+
 
 		.toast {
 			position: fixed;
@@ -264,17 +275,17 @@
 
 		<div id="out" class="cntr passwords hidden">
 			<div  class="row" onclick="copy('outS')">
-				<label class="lbl">Weak Password</label>
+				<label class="lbl">Weak Password <span> (Click to copy)</span></label>
 				<div id="outS" class="out"></div>
 		
 			</div>
 			<div class="row" onclick="copy('outM')">
-				<label class="lbl">Medium Password</label>
+				<label class="lbl">Medium Password <span> (Click to copy)</span></label>
 				<div id="outM" class="out"></div>
 			</div>
 
 			<div class="row" onclick="copy('outL')">
-				<label class="lbl">Strong Password</label>
+				<label class="lbl">Strong Password <span> (Click to copy)</span></label>
 				<div id="outL" class="out"></div>
 			</div>
 		</div>
