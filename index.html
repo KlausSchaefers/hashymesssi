@@ -12,53 +12,66 @@
 
 	<script type="text/javascript">
 
+		var hideTimeout = null
+
 		function crypt () {
 			var pass = document.getElementById("pass").value;
 			var service = document.getElementById("service").value;
 			if(pass.length==0 || service.length == 0){
-				document.getElementById("outS").innerHTML = "";
-				document.getElementById("outM").innerHTML = "";
-				document.getElementById("outL").innerHTML = "";
+				hide()
 				toast('Enter password and Service ID', 'error')
 				return;
 			}
 			var newPass = CryptoJS.AES.encrypt(service, pass).toString();
+			console.debug(newPass)
 			newPass = newPass.substring(10, newPass.length)
 			setPassword(newPass)
 		}
 
 		function sha256(){
-
 			var pass = document.getElementById("pass").value;
 			var service = document.getElementById("service").value;
 			if(pass.length==0 || service.length == 0){
-				document.getElementById("outS").innerHTML = "";
-				document.getElementById("outM").innerHTML = "";
-				document.getElementById("outL").innerHTML = "";
+				hide()
 				toast('Enter password and Service ID', 'error')
 				return;
 			}
 			var newPass = CryptoJS.SHA256(pass + service).toString();
 			setPassword(newPass)
-
-
 		}
 
-		function setPassword (newPass, cPass) {
+		function sha2562(){
+			var pass = document.getElementById("pass").value;
+			var service = document.getElementById("service").value;
+			if(pass.length==0 || service.length == 0){
+				hide()
+				toast('Enter password and Service ID', 'error')
+				return;
+			}
+			var newPass = CryptoJS.SHA256(pass + service).toString(CryptoJS.enc.Base64);
+			setPassword(newPass)
+		}
 
+
+
+		function setPassword (newPass, cPass) {
+			if (hideTimeout) {
+				clearTimeout(hideTimeout)
+			}
 			document.getElementById("outS").innerHTML = newPass.substring(0,10);
 			document.getElementById("outM").innerHTML = newPass.substring(0,20);
 			document.getElementById("outL").innerHTML = newPass;
 			document.getElementById("out").classList.remove("hidden")
-
-			setTimeout(() => {
-				document.getElementById("err").innerHTML = "";
-				document.getElementById("outS").innerHTML = "";
-				document.getElementById("outM").innerHTML = "";
-				document.getElementById("outL").innerHTML = "";
-				document.getElementById("out").classList.add("hidden")
+			hideTimeout = setTimeout(() => {
+				hide()
 			}, 60000);
+		}
 
+		function hide () {
+			document.getElementById("outS").innerHTML = "";
+			document.getElementById("outM").innerHTML = "";
+			document.getElementById("outL").innerHTML = "";
+			document.getElementById("out").classList.add("hidden")
 		}
 
 		function copy (id) {
@@ -94,6 +107,13 @@
 				node.classList.add('hidden')
 			}, 2000)
 		}
+
+		function focus () {
+			hide()
+		}
+
+		window.addEventListener('focus', focus);
+		window.addEventListener('blur', hide);
 
 	</script>
 
@@ -268,8 +288,10 @@
 			</div>
 
 			<div class="row" style="flex-direction: row;">
-				<a onclick="sha256()" class="btn">Hash</a> <a onclick="crypt()" class="btn">Crypt</a>
+				<a onclick="sha256()" class="btn">Hash</a> <a onclick="sha2562()" class="btn">Hash2</a>
 			</div>
+
+			
 		</div>
 
 
